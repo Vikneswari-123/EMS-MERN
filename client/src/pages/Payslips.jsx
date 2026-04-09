@@ -1,5 +1,3 @@
-
-
 const Payslips = () => {
   return (
     <div>Payslips</div>
@@ -7,3 +5,4 @@ const Payslips = () => {
 }
 
 export default Payslips
+
