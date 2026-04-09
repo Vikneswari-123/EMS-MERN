@@ -9,8 +9,8 @@ import Settings from "./pages/Settings"
 import Layout from "./pages/Layout"
 import LoginLanding from "./pages/LoginLanding"
 import { Navigate } from "react-router-dom"
-import PrintPayslip from "./pages/Payslips"
 import LoginForm from "./components/LoginForm"
+import PrintPayslip from "./pages/PrintPayslip"
 
 const App = () => {
   return (
@@ -25,7 +25,7 @@ const App = () => {
                 <Route path="/employees" element={<Employees />} /> 
                 <Route path="/attendance" element={<Attendance />} />
                 <Route path="/leave" element={<Leave />} />
-                <Route path="/payslips" element={<Payslips />} />
+                <Route path="/Payslips" element={<Payslips />} />
                 <Route path="/settings" element={<Settings />} />
             </Route>    
           <Route path="/print/payslips/:id" element={<PrintPayslip />} />
