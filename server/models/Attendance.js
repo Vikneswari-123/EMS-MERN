@@ -1,11 +1,11 @@
 import mongoose from "mongoose";
 
 const attendanceSchema = new mongoose.Schema({
-    employeeId : {type:mongoose.Schema.types.objectId, ref:"Employee" ,required:true},
+    employeeId : {type:mongoose.Schema.Types.ObjectId, ref:"Employee" ,required:true},
     date: {type: Date, required: true},
     checkIn: {type: Date, default: null},
     checkOut: {type: Date, default: null},
-    status: {type:string, enum:["PRESENT", "ABSENT", "LATE"], default:"PRESENT"},
+    status: {type:String, enum:["PRESENT", "ABSENT", "LATE"], default:"PRESENT"},
     workingHours: {type: Number, default: null}, 
     dayType: {type: String, enum:["Full Day", "Three Quarter Day", "Half Day", "Short Day", null], default: null}
 

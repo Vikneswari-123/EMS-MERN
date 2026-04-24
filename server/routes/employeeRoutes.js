@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { createEmployee, deleteEmployee, getEmployees, updateEmployee } from "../controllers/employeeController";
-import { protect, protectAdmin } from "../middleware/auth";
+import { createEmployee, deleteEmployee, getEmployees, updateEmployee } from "../controllers/employeeController.js";
+import { protect, protectAdmin } from "../middleware/auth.js";
 
 const employeesRouter = Router();
 
