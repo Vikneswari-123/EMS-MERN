@@ -10,29 +10,42 @@ import attendanceRouter from "./routes/attendanceRoutes.js";
 import leaveRouter from "./routes/leaveRoutes.js";
 import payslipRouter from "./routes/payslipsRoutes.js";
 import dashboardRouter from "./routes/dashboardRoutes.js";
-
 import { serve } from "inngest/express";
-import { inngest, functions } from "./inngest/index.js"
+import { inngest, functions } from "./inngest/index.js";
 
-const app = express()
+const app = express();
 const PORT = process.env.PORT || 4000;
 
-//Middleware
-app.use(cors())
-app.use(express.json())
-app.use(multer().none())
+// Middleware
+app.use(cors({
+  origin: process.env.FRONTEND_URL || "*",
+  credentials: true,
+}));
+app.use(express.json());
+app.use(multer().none());
 
 // Routes
-app.get("/", (req,res)=> res.send("Server is running"));
-app.use("/api/auth", authRouter)
-app.use("/api/employees", employeesRouter)
-app.use("/api/profile", profileRouter)
-app.use("/api/attendance", attendanceRouter)
-app.use("/api/leave", leaveRouter)
-app.use("/api/payslips", payslipRouter)
-app.use("/api/dashboard", dashboardRouter)
-
+app.get("/", (req, res) => res.send("Server is running"));
+app.use("/api/auth", authRouter);
+app.use("/api/employees", employeesRouter);
+app.use("/api/profile", profileRouter);
+app.use("/api/attendance", attendanceRouter);
+app.use("/api/leave", leaveRouter);
+app.use("/api/payslips", payslipRouter);
+app.use("/api/dashboard", dashboardRouter);
 app.use("/api/inngest", serve({ client: inngest, functions }));
 
-await connectDB()
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`))
+// Start server
+const startServer = async () => {
+  try {
+    await connectDB();
+    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+  } catch (error) {
+    console.error("Failed to start server:", error.message);
+    process.exit(1);
+  }
+};
+
+startServer();
+
+export default app;
