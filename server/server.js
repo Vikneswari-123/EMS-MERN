@@ -14,7 +14,6 @@ import { serve } from "inngest/express";
 import { inngest, functions } from "./inngest/index.js";
 
 const app = express();
-const PORT = process.env.PORT || 4000;
 
 // Middleware
 app.use(cors({
@@ -35,17 +34,12 @@ app.use("/api/payslips", payslipRouter);
 app.use("/api/dashboard", dashboardRouter);
 app.use("/api/inngest", serve({ client: inngest, functions }));
 
-// Start server
-const startServer = async () => {
-  try {
-    await connectDB();
-    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-  } catch (error) {
-    console.error("Failed to start server:", error.message);
-    process.exit(1);
-  }
-};
+// Connect DB then export
+await connectDB();
 
-startServer();
+if (process.env.NODE_ENV !== "production") {
+  const PORT = process.env.PORT || 4000;
+  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+}
 
 export default app;
