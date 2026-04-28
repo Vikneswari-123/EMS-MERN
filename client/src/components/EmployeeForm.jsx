@@ -1,14 +1,33 @@
 import {React, useState} from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Loader2Icon } from 'lucide-react';
+import toast from 'react-hot-toast';
+import api from '../api/axios';
 
-const DEPARTMENTS = ["HR", "Engineering", "Sales", "Marketing", "Finance"];
+const DEPARTMENTS = ["Engineering", "Human Resources", "Marketing", "Sales", "Finance", "Operations", "IT Support", "Customer Success", "Product Management", "Design"]
 const EmployeeForm = ({initialData, onSuccess, onCancel}) => {
     const navigate = useNavigate();
     const[loading, setLoading] = useState(false);
     const isEditMode = !!initialData;
+    
     const handleSubmit = async(e)=>{
         e.preventDefault()
+        setLoading(true)
+        const formData = new FormData(e.currentTarget);
+        if(isEditMode){
+            const pwd = formData.get("password")
+            if(!pwd) formData.delete("password")
+        }
+        try{
+           const url = isEditMode ? `/employees/${initialData.id}` : "/employees";
+           const method = isEditMode ? "put" : "post";
+           await api[method](url,formData)
+           onSuccess ? onSuccess() : navigate("/employees")
+        }catch(error){
+            toast.error(error.response?.data?.error || error.message)
+        }finally{
+            setLoading(false);
+        }
     }
   return (
     <form onSubmit={handleSubmit} className='space-y-6 max-w-3xl animate-fade-in'>
@@ -103,19 +122,19 @@ const EmployeeForm = ({initialData, onSuccess, onCancel}) => {
             <div className='grid grid-cols-1 sm:grid-cols-2 gap-5 text-sm text-slate-700'>
                 <div className='sm:col-span-2'>
                     <label className='block mb-2'>Work Email</label>
-                    <input name='workEmail' type='email' required defaultValue={initialData?.email}/>
+                    <input name='email' type='email' required defaultValue={initialData?.email}/>
                 </div>
                 {!isEditMode && (
                     <div className='sm:col-span-2'>
                     <label className='block mb-2'>Temporary password</label>
-                    <input name='temporaryPassword' type='password' required />
+                    <input name='password' type='password' required />
                     </div>
                 )}
 
                 {isEditMode && (
                     <div className='sm:col-span-2'>
                     <label className='block mb-2'>Change Password (Optional)</label>
-                    <input name='changePassword' type='password' placeholder='Leave blank to keep the current password' />
+                    <input name='password' type='password' placeholder='Leave blank to keep the current password' />
                     </div>
                 )}
 

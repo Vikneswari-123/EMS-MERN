@@ -58,7 +58,7 @@ export const session = (req,res)=>{
 
 export const changePassword = async (req,res)=>{
     try{
-       const seeion = req.session;
+       const session = req.session;
        const {currentPassword, newPassword} = req.body;
        if(!currentPassword || !newPassword){
           return res.status(400).json({error: "Both passwords are required"});
@@ -71,6 +71,7 @@ export const changePassword = async (req,res)=>{
        await User.findByIdAndUpdate(session.userId, {password:hashed})
        return res.json({success:true})
     }catch(error){
+        console.error("Change password error:", error)
        return res.status(500).json({error: "Failed to change password"})
     }
 }

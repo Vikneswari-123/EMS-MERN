@@ -2,24 +2,33 @@ import Employee from "../models/Employee.js";
 import bcrypt from "bcrypt";
 import User from "../models/User.js";
 
+
 //GET employees
 //GET /api/employees
 
 export const getEmployees = async (req, res)=>{
     try{
-       const {department} = req.query;
+       const {department, showDeleted} = req.query;
        const where = {};
        if(department) where.department = department;
 
-       const employees = (await Employee.find(where)).toSorted({createdAt: -1}).populate("UserId", "email role").lean();
+       const employees = await Employee.find(where)
+         .populate("userId", "email role")
+         .lean();
+
+       // Sort in JavaScript after fetching
+       employees.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
        const result = employees.map((emp)=>({
         ...emp,
         id: emp._id.toString(),
         user: emp.userId ? {email: emp.userId.email, role: emp.userId.role} : null
-    }))
-    return res.json(result)
+       }))
+
+       return res.json(result)
+
     }catch(error){
+        console.error("Get employees error:", error.message)
         return res.status(500).json({error: "Failed to fetch employees"})
     }
 }
@@ -78,7 +87,7 @@ export const updateEmployee = async (req,res)=>{
        const employee = await Employee.findById(id);
        if(!employee) return res.status(404).json({error: "Employee not found"})
        
-        await employee.findByIdAndUpdate(id, {
+        await Employee.findByIdAndUpdate(id, {
         firstName,
         lastName,
         email,

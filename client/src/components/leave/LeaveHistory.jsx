@@ -1,12 +1,22 @@
 import { Check, Loader2, X} from 'lucide-react'
 import React, { useState } from 'react'
 import { format } from 'date-fns'
+import toast from 'react-hot-toast'
+import api from '../../api/axios'
 
 const LeaveHistory = ({leaves, isAdmin, onUpdate}) => {
     const [processing, setProcessing] = useState(null)
 
     const handleStatusUpdate = async (id, status)=>{
         setProcessing(id)
+        try{
+            await api.patch(`/leave/${id}`, { status })
+            onUpdate()
+        }catch(err){
+            toast.error(err.response?.data?.error || err.message)
+        }finally{
+            setProcessing(null)
+        }
     }
   return (
     <div className='card overflow-hidden'>
@@ -26,7 +36,7 @@ const LeaveHistory = ({leaves, isAdmin, onUpdate}) => {
                         {leaves.length === 0 ? (
                             <tr>
                                 <td colSpan={isAdmin ? 6 : 4} className='text-center py-12 text-slate-400'>
-                                    No attendance history available.
+                                    No leave applications found.
                                 </td>
                             </tr>
                         ):(
