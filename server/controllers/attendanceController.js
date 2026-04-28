@@ -1,5 +1,6 @@
 import Attendance from "../models/Attendance.js";
 import Employee from "../models/Employee.js";
+import { inngest } from "../inngest/index.js";
 
 //Clock in/out for employee
 //POST /api/attendance

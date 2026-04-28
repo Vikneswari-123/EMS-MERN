@@ -42,7 +42,7 @@ export const getDashboard = async (req,res) => {
                         $lt: new Date(today.getFullYear(), today.getMonth()+1, 1),
 
                     }
-                }).
+                }),
                 LeaveApplication.countDocuments({
                     employeeId: employee._id,
                     status: "PENDING",
