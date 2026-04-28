@@ -17,7 +17,12 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: process.env.FRONTEND_URL || "*",
+  origin: [
+    "http://localhost:5173",
+    "http://localhost:3000",
+    "https://ems-mern-two.vercel.app",  // ← your frontend URL
+    /\.vercel\.app$/,                    // ← allow all vercel subdomains
+  ],
   credentials: true,
 }));
 app.use(express.json());
