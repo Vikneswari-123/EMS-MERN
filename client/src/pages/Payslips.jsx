@@ -6,6 +6,7 @@ import { format } from "date-fns";
 import GeneratePayslipForm from "../components/payslip/GeneratePayslipForm";
 import { useAuth } from "../context/AuthContext";
 import api from "../api/axios";
+import toast from "react-hot-toast";
 
 const Payslips = () => {
   const [payslips, setPayslips] = useState([])
